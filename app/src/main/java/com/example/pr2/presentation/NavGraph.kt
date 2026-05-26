@@ -9,45 +9,31 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun NavGraph() {
 
-    val navController =
-        rememberNavController()
+    val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = "list"
+        startDestination = "login"
     ) {
 
-        composable("list") {
-
-            NobelListScreen(navController)
+        composable("login") {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate("list") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            )
         }
 
-        composable(
-            "detail/{name}/{motivation}/{category}/{year}/{birthPlace}"
-        ) { backStack ->
-
-            NobelDetailScreen(
-
-                fullName = Uri.decode(
-                    backStack.arguments?.getString("name") ?: ""
-                ),
-
-                motivation = Uri.decode(
-                    backStack.arguments?.getString("motivation") ?: ""
-                ),
-
-                category = Uri.decode(
-                    backStack.arguments?.getString("category") ?: ""
-                ),
-
-                year = Uri.decode(
-                    backStack.arguments?.getString("year") ?: ""
-                ),
-
-                birthPlace = Uri.decode(
-                    backStack.arguments?.getString("birthPlace") ?: ""
-                )
+        composable("list") {
+            PrizeListScreen(
+                navController = navController
             )
+        }
+
+        composable("favorites") {
+            FavoritesScreen()
         }
     }
 }
